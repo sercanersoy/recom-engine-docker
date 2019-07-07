@@ -67,6 +67,7 @@ services:
       - ./volumes/spark/conf/master:/conf
       - ./volumes/spark/data:/tmp/data
       - ./volumes/spark/jars/:/jars
+      - ./volumes/spark/models/:/models
       - ./volumes/flume-output:/logs/flume
 
   spark-worker:
@@ -93,6 +94,8 @@ services:
     volumes:
       - ./volumes/spark/conf/worker:/conf
       - ./volumes/spark/data:/tmp/data
+      - ./volumes/spark/jars/:/jars
+      - ./volumes/spark/models/:/models
       - ./volumes/flume-output:/logs/flume
 
   mongo1:
