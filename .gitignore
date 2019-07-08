@@ -1,8 +1,2 @@
-volumes/flume-output/*
-volumes/spark/conf/master/*
-volumes/spark/conf/worker/*
-volumes/spark/data/*
-volumes/zk-single-kafka-single/kafka1/data/*
-volumes/zk-single-kafka-single/zoo1/data/*
-volumes/zk-single-kafka-single/zoo1/datalog/*
+volumes/*
 
