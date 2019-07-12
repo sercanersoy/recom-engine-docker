@@ -43,7 +43,7 @@ services:
       - zoo1
 
   spark-master:
-    build: ./images/spark
+    build: ./images/spark/master
     command: bin/spark-class org.apache.spark.deploy.master.Master -h spark-master
     hostname: spark-master
     environment:
@@ -67,11 +67,11 @@ services:
       - ./volumes/spark/conf/master:/conf
       - ./volumes/spark/data:/tmp/data
       - ./volumes/spark/jars/:/jars
-      - ./volumes/spark/models/:/models
       - ./volumes/flume-output:/logs/flume
+      - ./volumes/spark/cronjobs:/cronjobs
 
   spark-worker:
-    build: ./images/spark
+    build: ./images/spark/worker
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     hostname: spark-worker
     environment:
@@ -94,7 +94,6 @@ services:
     volumes:
       - ./volumes/spark/conf/worker:/conf
       - ./volumes/spark/data:/tmp/data
-      - ./volumes/spark/jars/:/jars
       - ./volumes/spark/models/:/models
       - ./volumes/flume-output:/logs/flume
 
