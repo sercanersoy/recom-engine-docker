@@ -62,5 +62,11 @@ RUN curl -sL --retry 3 \
  && mv /usr/$SPARK_PACKAGE $SPARK_HOME \
  && chown -R root:root $SPARK_HOME
 
+# kafka-clients dependency
+RUN curl \
+   "https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.3.0/kafka-clients-2.3.0.jar" \
+   --output kafka-clients-2.3.0.jar \
+  && mv kafka-clients-2.3.0.jar $SPARK_HOME/jars/
+
 WORKDIR $SPARK_HOME
 CMD ["bin/spark-class", "org.apache.spark.deploy.master.Master"]
