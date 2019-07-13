@@ -6,6 +6,8 @@ services:
     ports: 
       - "41414:41414"
       - "1234:1234"
+    networks:
+      - project
     volumes:
       - ./images/flume/flume.conf:/opt/flume/conf/flume.conf
       - ./volumes/flume-output:/logs
@@ -15,6 +17,8 @@ services:
     hostname: zoo1
     ports:
       - "2181:2181"
+    networks:
+      - project
     environment:
         ZOO_MY_ID: 1
         ZOO_PORT: 2181
@@ -29,6 +33,8 @@ services:
     ports:
       - "9092:9092"
       - "19092:19092"
+    networks:
+      - project
     environment:
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
@@ -58,12 +64,16 @@ services:
       - 7005
       - 7077
       - 6066
+      - 8080
     ports:
       - 4040:4040
       - 6066:6066
       - 7077:7077
       - 8383:8080
+    networks:
+      - project
     volumes:
+      - ./images/spark/master/target/:/app/
       - ./volumes/spark/conf/master:/conf
       - ./volumes/spark/data:/tmp/data
       - ./volumes/spark/jars/:/jars
@@ -91,7 +101,10 @@ services:
       - 8881
     ports:
       - 8082:8082
+    networks:
+      - project
     volumes:
+      - ./images/spark/master/target/:/app/
       - ./volumes/spark/conf/worker:/conf
       - ./volumes/spark/data:/tmp/data
       - ./volumes/spark/models/:/models
@@ -102,9 +115,16 @@ services:
     hostname: mongo1
     ports:
       - "27017:27017"
+    networks:
+      - project
 
   spring-boot1:
     build: ./images/spring-boot/
     hostname: spring-boot1
     ports:
       - "8080:8080"
+    networks:
+      - project
+
+networks:
+  project:

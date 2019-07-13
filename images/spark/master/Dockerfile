@@ -1,9 +1,6 @@
 FROM debian:stretch
 MAINTAINER Getty Images "https://github.com/gettyimages"
 
-RUN mkdir /app
-COPY target/*.jar /app/
-
 RUN apt-get update \
  && apt-get install -y locales \
  && dpkg-reconfigure -f noninteractive locales \
@@ -15,7 +12,9 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /logs/flume/ \
  && mkdir /jars \
- && mkdir /cronjobs
+ && mkdir /cronjobs \
+ && mkdir /app \
+ && mkdir /scripts
 
 # Users with other locales should set this in their derivative image
 ENV LANG en_US.UTF-8
@@ -72,7 +71,9 @@ RUN curl \
    "https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.3.0/kafka-clients-2.3.0.jar" \
    --output kafka-clients-2.3.0.jar \
   && mv kafka-clients-2.3.0.jar $SPARK_HOME/jars/ \
-  && echo "*/5 * * * * /cronjobs/ml-submitter.sh" >> /etc/crontab
+  && echo "*/5 * * * * /bin/bash /cronjobs/ml-submitter.sh" >> /etc/crontab
+
+COPY ./spark-streaming-starter.sh /scripts/
 
 WORKDIR $SPARK_HOME
-CMD ["bin/spark-class", "org.apache.spark.deploy.master.Master", "&&", "bin/spark-submit", "--class com.trendyol.recomengine.streaming.Main --deploy-mode cluster --supervise --total-executor-cores 1 --master spark://spark-master:7077 /app/recom-engine-streaming-assembly-0.1.jar"]
+ENTRYPOINT ["/bin/bash", "/scripts/spark-streaming-starter.sh"]
