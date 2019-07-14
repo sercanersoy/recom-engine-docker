@@ -1,6 +1,8 @@
 #!/bin/bash
 
-$SPARK_HOME/bin/spark-submit \
+source /export.sh
+
+/usr/spark-2.4.1/bin/spark-submit \
     --class com.trendyol.recomengine.ml.Main \
     --deploy-mode cluster \
     --total-executor-cores 1 \

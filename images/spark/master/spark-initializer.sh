@@ -1,5 +1,8 @@
 #!/bin/bash
 
+cron
+export > /export.sh
+
 until curl --max-time 2 -f http://127.0.0.1:8080 && $SPARK_HOME/bin/spark-submit \
         --class com.trendyol.recomengine.streaming.Main \
         --deploy-mode cluster \

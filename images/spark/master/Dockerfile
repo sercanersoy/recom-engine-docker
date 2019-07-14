@@ -11,7 +11,6 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /logs/flume/ \
- && mkdir /jars \
  && mkdir /cronjobs \
  && mkdir /app \
  && mkdir /scripts
@@ -71,9 +70,9 @@ RUN curl \
    "https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.3.0/kafka-clients-2.3.0.jar" \
    --output kafka-clients-2.3.0.jar \
   && mv kafka-clients-2.3.0.jar $SPARK_HOME/jars/ \
-  && echo "*/5 * * * * /bin/bash /cronjobs/ml-submitter.sh" >> /etc/crontab
+  && echo "*/5 * * * * root /bin/bash /cronjobs/ml-submitter.sh" >> /etc/crontab
 
-COPY ./spark-streaming-starter.sh /scripts/
+COPY ./spark-initializer.sh /scripts/
 
 WORKDIR $SPARK_HOME
-ENTRYPOINT ["/bin/bash", "/scripts/spark-streaming-starter.sh"]
+ENTRYPOINT ["/bin/bash", "/scripts/spark-initializer.sh"]

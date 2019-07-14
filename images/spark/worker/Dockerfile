@@ -11,8 +11,7 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /logs/flume/ \
- && mkdir /app \
- && mkdir /jars
+ && mkdir /app
 
 # Users with other locales should set this in their derivative image
 ENV LANG en_US.UTF-8

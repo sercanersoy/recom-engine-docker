@@ -1,17 +1,5 @@
 version: '3.7'
 services:
-  flume1:
-    build: ./images/flume
-    hostname: flume1
-    ports: 
-      - "41414:41414"
-      - "1234:1234"
-    networks:
-      - project
-    volumes:
-      - ./images/flume/flume.conf:/opt/flume/conf/flume.conf
-      - ./volumes/flume-output:/logs
-
   zoo1:
     image: zookeeper:3.4.9
     hostname: zoo1
@@ -48,6 +36,18 @@ services:
     depends_on:
       - zoo1
 
+  flume1:
+    build: ./images/flume
+    hostname: flume1
+    ports: 
+      - "41414:41414"
+      - "1234:1234"
+    networks:
+      - project
+    volumes:
+      - ./images/flume/flume.conf:/opt/flume/conf/flume.conf
+      - ./volumes/flume-output:/logs
+
   spark-master:
     build: ./images/spark/master
     command: bin/spark-class org.apache.spark.deploy.master.Master -h spark-master
@@ -74,11 +74,11 @@ services:
       - project
     volumes:
       - ./images/spark/master/target/:/app/
+      - ./images/spark/master/cronjobs:/cronjobs
       - ./volumes/spark/conf/master:/conf
       - ./volumes/spark/data:/tmp/data
-      - ./volumes/spark/jars/:/jars
+      - ./volumes/spark/models/:/models
       - ./volumes/flume-output:/logs/flume
-      - ./volumes/spark/cronjobs:/cronjobs
 
   spark-worker:
     build: ./images/spark/worker
